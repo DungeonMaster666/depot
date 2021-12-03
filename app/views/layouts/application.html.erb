@@ -13,7 +13,9 @@
   <body>
     <header class="main">
       <%= image_tag 'logo.svg', alt: 'The Pragmatic Bookshelf' %>
+
       <h1><%= @page_title %></h1>
+      <%= Time.now.to_formatted_s(:long) %>
     </header>
     <section class="content">
       <nav class="side_nav">
