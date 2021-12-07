@@ -28,7 +28,8 @@ class LineItemsController < ApplicationController
 
     respond_to do |format|
       if @line_item.save
-        format.html { redirect_to @line_item.cart, notice: "Line item was successfully created." }
+        format.html { redirect_to store_index_url }
+        format.js   { @current_item = @line_item }
         format.json { render :show, status: :created, location: @line_item }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -52,12 +53,22 @@ class LineItemsController < ApplicationController
 
   # DELETE /line_items/1 or /line_items/1.json
   def destroy
-    @line_item.destroy
-    respond_to do |format|
-      format.html { redirect_to line_items_url, notice: "Line item was successfully destroyed." }
-      format.json { head :no_content }
+    @cart
+    if @line_item.quantity>1
+      @line_item.minus_one(@line_item)
+      respond_to do |format|
+        format.html { redirect_to store_index_url, notice: "Line item was successfully deleted." }
+      end
+    else
+      @line_item.destroy
+      respond_to do |format|
+        format.html { redirect_to store_index_url, notice: "Line item was successfully destroyed." }
+        format.json { head :no_content }
+        format.js
+      end
     end
   end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
