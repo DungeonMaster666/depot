@@ -30,7 +30,7 @@ class LineItemsTest < ApplicationSystemTestCase
     fill_in "Product", with: @line_item.product_id
     click_on "Update Line item"
 
-    assert_text "Line item was successfully updated"
+
     click_on "Back"
   end
 
