@@ -42,9 +42,11 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update order" do
-    patch order_url(@order), params: { order: { address: @order.address, email: @order.email, name: @order.name, pay_type: @order.pay_type } }
+    patch order_url(@order), params: { order: { address: @order.address, email: @order.email, name: @order.name, pay_type: @order.pay_type, ship_date: @order.ship_date } }
     assert_redirected_to order_url(@order)
   end
+
+
 
   test "should destroy order" do
     assert_difference('Order.count', -1) do

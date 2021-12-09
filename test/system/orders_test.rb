@@ -1,6 +1,9 @@
 require "application_system_test_case"
+require 'pry'
+require 'colorize'
 
 class OrdersTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
   setup do
     @order = orders(:one)
   end
@@ -10,6 +13,26 @@ class OrdersTest < ApplicationSystemTestCase
     assert_selector "h1", text: "Orders"
   end
 
+  test "update shipment date" do
+
+    visit orders_url
+    click_on "Edit", match: :first
+    fill_in 'order_ship_date', with: "12.05.2023"
+
+    perform_enqueued_jobs do
+      click_button "Place Order"
+    end
+
+    order = Order.order("updated_at").last
+
+    assert_equal "12.05.2023", order.ship_date.strftime("%d.%m.%Y")
+
+    mail = ActionMailer::Base.deliveries.last
+    assert_equal ["MyString"], mail.to
+    assert_equal 'Sam Ruby <depot@example.com>', mail[:from].value
+    assert_equal "Pragmatic Store Order Ship Date", mail.subject
+
+  end
 
   test "destroying a Order" do
     visit orders_url
@@ -39,7 +62,11 @@ class OrdersTest < ApplicationSystemTestCase
 
   end
 
+
+
   test "check routing number" do
+    LineItem.delete_all
+    Order.delete_all
     visit store_index_url
     click_on 'Add to Cart', match: :first
     click_on 'Checkout'
@@ -51,6 +78,42 @@ class OrdersTest < ApplicationSystemTestCase
     select 'Check', from: 'Pay type'
     assert_selector "#order_routing_number"
     assert_selector "#order_account_number"
+
+    fill_in "Routing #", with: "123456"
+    fill_in "Account #", with: "78910"
+
+    perform_enqueued_jobs do
+      click_button "Place Order"
+    end
+
+    if assert_text "Error has occurred."
+      orders = Order.all
+      assert_equal 0, orders.size
+
+      mail = ActionMailer::Base.deliveries.last
+      assert_equal ["dave@example.com"], mail.to
+      assert_equal 'Sam Ruby <depot@example.com>', mail[:from].value
+      assert_equal "Pragmatic Store Order Error", mail.subject
+
+    elsif assert_text "Thank you for your order."
+      orders = Order.all
+      assert_equal 1, orders.size
+
+
+      order = orders.first
+
+      assert_equal "Dave Thomas", order.name
+      assert_equal "123 Main Street", order.address
+      assert_equal "dave@example.com", order.email
+      assert_equal "Check", order.pay_type
+      assert_equal 1, order.line_items.size
+
+      mail = ActionMailer::Base.deliveries.last
+      assert_equal ["dave@example.com"], mail.to
+      assert_equal 'Sam Ruby <depot@example.com>', mail[:from].value
+      assert_equal "Pragmatic Store Order Confirmation", mail.subject
+    end
+
 
   end
 

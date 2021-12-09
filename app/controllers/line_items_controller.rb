@@ -57,14 +57,15 @@ class LineItemsController < ApplicationController
       @line_item.minus_one(@line_item)
       respond_to do |format|
         format.html { redirect_to store_index_url}
-        format.js
+        format.js { @current_item = @line_item  }
       end
     else
       @line_item.destroy
+      @items_in_cart = @cart.line_items.any?
       respond_to do |format|
         format.html { redirect_to store_index_url, notice: "Line item was successfully destroyed." }
         format.json { head :no_content }
-        format.js
+        format.js { @empty = true; @items_in_cart }
       end
     end
   end

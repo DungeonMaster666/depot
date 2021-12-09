@@ -1,0 +1,7 @@
+Dear <%= @order.name %>
+
+Your order <%= @order.id %> has been approved and now is ready for a shipment!
+
+Shipment Date is <%= @order.ship_date.strftime("%d.%m.%Y") %>
+
+We'll send you a separate email when your order will be shipped.

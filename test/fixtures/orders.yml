@@ -3,8 +3,9 @@
 one:
   name: Dave Supreme
   address: MyText
-  email: MyString@example.com
+  email: dave@example.org
   pay_type: Check
+  ship_date: 31.12.2021
 
 two:
   name: MyString

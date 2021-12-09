@@ -1,5 +1,10 @@
-cart = document.getElementById("cart")
-cart.innerHTML = "<%= j render(@cart) %>"
+<% if !@empty or (@empty && @items_in_cart)  %>
+  cart = document.getElementById("cart")
+  cart.innerHTML = "<%= j render(@cart) %>"
+<% elsif !@items_in_cart%>
+  cart = document.getElementById("cart")
+  cart.innerHTML = "<% j render(@cart) %>"
+<% end %>
 
 notice = document.getElementById("notice")
 if (notice) notice.style.display = "none"
