@@ -6,9 +6,18 @@ one:
   email: dave@example.org
   pay_type: Check
   ship_date: 31.12.2021
+  succeed: false
 
 two:
   name: MyString
   address: MyText
   email: MyString
   pay_type: 1
+
+true:
+  name: Dave Supreme
+  address: MyText
+  email: dave@example.org
+  pay_type: Check
+  ship_date: 31.12.2021
+  succeed: true

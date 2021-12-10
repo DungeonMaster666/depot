@@ -9,7 +9,7 @@ one:
 two:
   title: MyString2
   description: MyText
-  image_url: lorem.jpg
+  image_url: ruby.jpg
   price: 9.99
 
 ruby:

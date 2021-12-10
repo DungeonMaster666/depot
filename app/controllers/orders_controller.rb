@@ -1,5 +1,6 @@
 require 'pry'
 class OrdersController < ApplicationController
+  skip_before_action :authorize, only: [:new, :create]
   include CurrentCart
   before_action :set_cart, only: [:new, :create]
   before_action :ensure_cart_isnt_empty, only: :new
@@ -36,8 +37,13 @@ class OrdersController < ApplicationController
         session[:cart_id] = nil
 
         ChargeOrderJob.perform_later(@order, pay_type_params.to_h)
+        if Order.find(@order.id).succeed==true
           format.html { redirect_to store_index_url, notice: "Thank you for your order." }
           format.json { render :show, status: :created, location: @order }
+        else
+          format.html { redirect_to store_index_url, notice: "During payment error has been occurred.
+            Please check your email and try again." }
+        end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @order.errors, status: :unprocessable_entity }

@@ -42,12 +42,16 @@ class Order < ApplicationRecord
                payment_method: payment_method,
                payment_details: payment_details)
 
+
     if payment_result.succeeded==true
       OrderMailer.received(self).deliver_later
+      self.succeed=true
+      self.save!
     else
       OrderMailer.error(self).deliver_later
-      Order.destroy(self.id)
-      raise payment_result.error
+      self.succeed=false
+      self.save!
+
     end
 
   end

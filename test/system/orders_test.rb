@@ -64,7 +64,7 @@ class OrdersTest < ApplicationSystemTestCase
 
 
 
-  test "check routing number" do
+  test "check routing number and succeeded" do
     LineItem.delete_all
     Order.delete_all
     visit store_index_url
@@ -86,21 +86,23 @@ class OrdersTest < ApplicationSystemTestCase
       click_button "Place Order"
     end
 
-    if assert_text "Error has occurred."
-      orders = Order.all
-      assert_equal 0, orders.size
+    if Order.last.succeed==false
+      assert_text "During payment error has been occurred. Please check your email and try again."
+      order = Order.last
+
+      assert_equal false, order.succeed
 
       mail = ActionMailer::Base.deliveries.last
       assert_equal ["dave@example.com"], mail.to
       assert_equal 'Sam Ruby <depot@example.com>', mail[:from].value
       assert_equal "Pragmatic Store Order Error", mail.subject
 
-    elsif assert_text "Thank you for your order."
-      orders = Order.all
-      assert_equal 1, orders.size
+    elsif Order.last.succeed==true
+      assert_text "Thank you for your order."
+      order = Order.last
+      assert_equal true, order.succeed
 
 
-      order = orders.first
 
       assert_equal "Dave Thomas", order.name
       assert_equal "123 Main Street", order.address
