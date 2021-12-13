@@ -44,9 +44,9 @@ class Order < ApplicationRecord
 
 
     if payment_result.succeeded==true
-      OrderMailer.received(self).deliver_later
       self.succeed=true
       self.save!
+      OrderMailer.received(self).deliver_later
     else
       OrderMailer.error(self).deliver_later
       self.succeed=false

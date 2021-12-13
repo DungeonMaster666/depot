@@ -1,28 +1,28 @@
 <%= form_with(model: order) do |form| %>
   <% if order.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
-
+      <h2><%= raw t('errors.template.header', count: @order.errors.count, model: t('activerecord.models.order')) %></h2>
+      <p><%= t('errors.template.body') %></p>
       <ul>
-        <% order.errors.each do |error| %>
-          <li><%= error.full_message %></li>
+        <% order.errors.full_messages.each do |message| %>
+          <li><%= raw message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
   <div class="field">
-    <%= form.label :name %>
+    <%= form.label :name, t('.name') %>
     <%= form.text_field :name, size: 40 %>
   </div>
 
   <div class="field">
-    <%= form.label :address %>
+    <%= form.label :address, t('.address_html') %>
     <%= form.text_area :address, rows: 3, cols: 40 %>
   </div>
 
   <div class="field">
-    <%= form.label :email %>
+    <%= form.label :email, t('.email') %>
     <%= form.text_field :email, size: 40 %>
   </div>
 
@@ -30,7 +30,7 @@
 
   <% if @type=="edit" %>
     <div class="field">
-      <%= form.label :ship_date %>
+      <%= form.label :ship_date, t('.ship_date') %>
       <%= form.date_field :ship_date, id: "order_ship_date" %>
     </div>
   <% end %>
@@ -38,6 +38,6 @@
 
 
   <div class="actions">
-    <%= form.submit 'Place Order' %>
+    <%= form.submit t('.submit') %>
   </div>
 <% end %>

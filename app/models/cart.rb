@@ -1,4 +1,5 @@
 class Cart < ApplicationRecord
+  include CurrencyConverter
   has_many :line_items, dependent: :destroy
 
   def add_product(product)

@@ -2,7 +2,12 @@
   <aside id="notice"><%= notice %></aside>
 <% end %>
 
-<h1>Catalog</h1>
+<h1><%= t('.title_html') %></h1>
+
+  <%= form_tag do %>
+    <%= select_tag 'book_locale', options_for_select(@book_languages)%>
+    <%= submit_tag 'Filter by language'%>
+  <% end %>
 
 
 <ul class="catalog">
@@ -11,14 +16,15 @@
     <% cache product do %>
       <li>
         <%# <%= button_to image_tag(product.image_url), line_items_path(product_id: product), remote: true  %>
-        <%= link_to image_tag(product.image_url), line_items_path(product_id: product), method: :post, remote: true %>
+        <%= link_to image_tag(product.image_url), line_items_path(product_id: product, locale: I18n.locale), method: :post, remote: true %>
         <h2><%= product.title %></h2>
         <p>
           <%= sanitize(product.description) %>
         </p>
         <div class="price">
-          <%= number_to_currency(product.price, :unit => "€") %>
-          <%= button_to 'Add to Cart', line_items_path(product_id: product), remote: true %>
+
+          <%= number_to_currency(usd_to_euro(product.price)) %>
+          <%= button_to t('.add_html'), line_items_path(product_id: product, locale: I18n.locale), remote: true %>
         </div>
       </li>
       <% end %>

@@ -4,10 +4,15 @@
   <tr>
 <% end %>
 <div id="row">
-  <td><%= button_to '-1', line_item, method: :delete, remote: true %></td>
+  <% unless @disable_remove_items %>
+    <td><%= button_to '-1', line_item, method: :delete, remote: true %></td>
+  <% end %>
   <td class="quantity"><%= line_item.quantity %></td>
-  <td><%= button_to '+1', line_items_url(product_id: line_item.product_id), method: :post, remote: true %></td>
+  <% unless @disable_remove_items %>
+    <td><%= button_to '+1', line_items_url(product_id: line_item.product_id), method: :post, remote: true %></td>
+  <% end %>
   <td><%= line_item.product.title %></td>
   <td class="price"><%= number_to_currency(line_item.total_price) %></td>
 </div>
 </tr>
+

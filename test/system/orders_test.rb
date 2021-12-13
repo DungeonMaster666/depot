@@ -87,7 +87,7 @@ class OrdersTest < ApplicationSystemTestCase
     end
 
     if Order.last.succeed==false
-      assert_text "During payment error has been occurred. Please check your email and try again."
+      assert_text "Thank you for your order. Check your email as soon as possible!"
       order = Order.last
 
       assert_equal false, order.succeed
@@ -98,7 +98,7 @@ class OrdersTest < ApplicationSystemTestCase
       assert_equal "Pragmatic Store Order Error", mail.subject
 
     elsif Order.last.succeed==true
-      assert_text "Thank you for your order."
+      assert_text "Thank you for your order. Check your e-mail as soon as possible!"
       order = Order.last
       assert_equal true, order.succeed
 

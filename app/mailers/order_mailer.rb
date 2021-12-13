@@ -29,7 +29,7 @@ class OrderMailer < ApplicationMailer
   #
   def shipped(order)
     @order = order
-
+    @disable_remove_items = true
     mail to: order.email, subject: 'Pragmatic Store Order Shipped'
   end
 end

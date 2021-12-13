@@ -5,11 +5,11 @@ class OrdersController < ApplicationController
   before_action :set_cart, only: [:new, :create]
   before_action :ensure_cart_isnt_empty, only: :new
   before_action :set_order, only: %i[ show edit update destroy ]
-
   @type
   # GET /orders or /orders.json
   def index
     @orders = Order.all
+
   end
 
   # GET /orders/1 or /orders/1.json
@@ -28,22 +28,18 @@ class OrdersController < ApplicationController
 
   # POST /orders or /orders.json
   def create
+
     @order = Order.new(order_params)
     @order.add_line_items_from_cart(@cart)
 
     respond_to do |format|
       if @order.save
+
         Cart.destroy(session[:cart_id])
         session[:cart_id] = nil
-
         ChargeOrderJob.perform_later(@order, pay_type_params.to_h)
-        if Order.find(@order.id).succeed==true
-          format.html { redirect_to store_index_url, notice: "Thank you for your order." }
+          format.html { redirect_to store_index_url(locale: I18n.locale), notice: I18n.t('.thanks') }
           format.json { render :show, status: :created, location: @order }
-        else
-          format.html { redirect_to store_index_url, notice: "During payment error has been occurred.
-            Please check your email and try again." }
-        end
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @order.errors, status: :unprocessable_entity }

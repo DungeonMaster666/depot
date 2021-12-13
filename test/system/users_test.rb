@@ -43,7 +43,6 @@ class UsersTest < ApplicationSystemTestCase
   test "destroying a User" do
     visit users_url
 
-    binding.pry
     page.accept_confirm do
       click_on "Destroy", match: :first
     end
@@ -53,7 +52,5 @@ class UsersTest < ApplicationSystemTestCase
 
   test "need access after logout" do
     visit users_url
-    binding.pry
-    logout()
   end
 end

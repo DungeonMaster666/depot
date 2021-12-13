@@ -1,4 +1,4 @@
-module StoreHelper
+module CurrencyConverter
   def usd_to_euro(money)
     if I18n.locale == :es
       coef = 0.88516501
