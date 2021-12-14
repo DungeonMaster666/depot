@@ -41,7 +41,8 @@ class ProductsController < ApplicationController
       if @product.update(product_params)
         format.html { redirect_to @product, notice: "Product was successfully updated." }
         format.json { render :show, status: :ok, location: @product }
-
+        @book_languages = Product.pluck(:locale).uniq
+        @book_languages.unshift("All")
         @products = Product.all.order(:title)
         ActionCable.server.broadcast('products', { html: render_to_string('store/index', layout: false) }
         )

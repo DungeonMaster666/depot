@@ -1,3 +1,4 @@
+require 'pry'
 class StoreController < ApplicationController
   skip_before_action :authorize
   include CurrentCart
@@ -16,7 +17,9 @@ class StoreController < ApplicationController
       if params[:book_locale] == "All"
         @products = Product.order(:title)
       elsif params[:book_locale]
+
         @products = Product.where(locale: params[:book_locale]).order(:title)
+
       else
         @products = Product.order(:title)
       end

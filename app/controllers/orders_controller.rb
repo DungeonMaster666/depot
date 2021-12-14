@@ -3,7 +3,7 @@ class OrdersController < ApplicationController
   skip_before_action :authorize, only: [:new, :create]
   include CurrentCart
   before_action :set_cart, only: [:new, :create]
-  before_action :ensure_cart_isnt_empty, only: :new
+  before_action :ensure_cart_isnt_empty, only: [:new, :create]
   before_action :set_order, only: %i[ show edit update destroy ]
   @type
   # GET /orders or /orders.json
@@ -28,24 +28,25 @@ class OrdersController < ApplicationController
 
   # POST /orders or /orders.json
   def create
+      @order = Order.new(order_params)
+      @order.add_line_items_from_cart(@cart)
 
-    @order = Order.new(order_params)
-    @order.add_line_items_from_cart(@cart)
+      respond_to do |format|
+        if @order.save
 
-    respond_to do |format|
-      if @order.save
-
-        Cart.destroy(session[:cart_id])
-        session[:cart_id] = nil
-        ChargeOrderJob.perform_later(@order, pay_type_params.to_h)
-          format.html { redirect_to store_index_url(locale: I18n.locale), notice: I18n.t('.thanks') }
-          format.json { render :show, status: :created, location: @order }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
+          Cart.destroy(session[:cart_id])
+          session[:cart_id] = nil
+          ChargeOrderJob.perform_later(@order, pay_type_params.to_h)
+            format.html { redirect_to store_index_url(locale: I18n.locale), notice: I18n.t('.thanks') }
+            format.json { render :show, status: :created, location: @order }
+        else
+          puts @order.errors.full_messages
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @order.errors, status: :unprocessable_entity }
+        end
       end
+
     end
-  end
 
   # PATCH/PUT /orders/1 or /orders/1.json
   def update
@@ -77,7 +78,7 @@ class OrdersController < ApplicationController
 
     def ensure_cart_isnt_empty
       if @cart.line_items.empty?
-        redirect_to store_index_url, notice: 'Your cart is empty'
+        redirect_to store_index_url(locale: I18n.locale), notice: 'Your cart is empty'
       end
     end
 

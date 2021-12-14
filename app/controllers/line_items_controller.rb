@@ -29,7 +29,7 @@ class LineItemsController < ApplicationController
 
     respond_to do |format|
       if @line_item.save
-        format.html { redirect_to store_index_url }
+        format.html { redirect_to store_index_url(locale: I18n.locale) }
         format.js   { @current_item = @line_item }
         format.json { render :show, status: :created, location: @line_item }
       else
@@ -57,14 +57,14 @@ class LineItemsController < ApplicationController
     if @line_item.quantity>1
       @line_item.minus_one(@line_item)
       respond_to do |format|
-        format.html { redirect_to store_index_url}
+        format.html { redirect_to store_index_url(locale: I18n.locale)}
         format.js { @current_item = @line_item  }
       end
     else
       @line_item.destroy
       @items_in_cart = @cart.line_items.any?
       respond_to do |format|
-        format.html { redirect_to store_index_url, notice: "Line item was successfully destroyed." }
+        format.html { redirect_to store_index_url(locale: I18n.locale), notice: "Line item was successfully destroyed." }
         format.json { head :no_content }
         format.js { @empty = true; @items_in_cart }
       end

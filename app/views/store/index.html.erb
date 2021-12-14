@@ -5,6 +5,7 @@
 <h1><%= t('.title_html') %></h1>
 
   <%= form_tag do %>
+
     <%= select_tag 'book_locale', options_for_select(@book_languages)%>
     <%= submit_tag 'Filter by language'%>
   <% end %>

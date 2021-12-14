@@ -80,4 +80,5 @@ en:
         po_number: "PO #"
   thanks: "Thank you for your order. Check your email as soon as possible!"
   product_price: "%{price}"
+  empty_cart: "Cart can't be empty. Please, fill your card with products before making an order."
 

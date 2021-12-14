@@ -1,8 +1,9 @@
 require "test_helper"
-
+require 'pry'
 class OrdersControllerTest < ActionDispatch::IntegrationTest
   setup do
     @order = orders(:one)
+    @order_create = orders(:test)
   end
 
   test "should get index" do
@@ -24,11 +25,18 @@ class OrdersControllerTest < ActionDispatch::IntegrationTest
 
 
   test "should create order" do
-    assert_difference('Order.count') do
-      post orders_url, params: { order: { address: @order.address, email: @order.email, name: @order.name, pay_type: @order.pay_type } }
-    end
+    if @order_create.line_items.any?
+      assert_difference('Order.count') do
+        post orders_url, params: { order: { address: "test", email: "test@test.com", name: "Test", pay_type: "Check" } }
+      end
 
-    assert_redirected_to store_index_url(locale: 'en')
+      assert_redirected_to store_index_url(locale: I18n.locale)
+
+    else
+
+      assert_redirected_to "http://localhost:3000/admin?locale=en"
+
+    end
   end
 
   test "should show order" do

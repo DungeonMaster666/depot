@@ -15,10 +15,15 @@ class ApplicationController < ActionController::Base
       if I18n.available_locales.map(&:to_s).include?(params[:locale])
         I18n.locale = params[:locale]
       else
+        redirect_to store_index_url(locale: I18n.default_locale)
         flash.now[:notice] = "#{params[:locale]} translation not available"
         logger.error flash.now[:notice]
       end
     end
+  end
+
+  def default_url_options
+    { locale: I18n.locale }
   end
 
 

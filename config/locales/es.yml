@@ -68,3 +68,4 @@ es:
         other:      "%{count} errores han impedido que este %{model} se guarde"
   thanks:           "Gracias por tu pedido. ¡Revisa tu correo electrónico lo antes posible!"
   product_price: "%{price}"
+  empty_cart: "El carrito no puede estar vacío. Por favor, complete su tarjeta con productos antes de realizar un pedido."

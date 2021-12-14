@@ -53,7 +53,7 @@ class UsersController < ApplicationController
     if @user.id == session[:user_id]
       @user.destroy
       respond_to do |format|
-        format.html { redirect_to store_index_url, notice: "User was successfully destroyed." }
+        format.html { redirect_to store_index_url(locale: I18n.locale), notice: "User was successfully destroyed." }
         format.json { head :no_content }
       end
 
