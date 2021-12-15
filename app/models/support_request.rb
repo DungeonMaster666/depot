@@ -1,3 +1,5 @@
 class SupportRequest < ApplicationRecord
-  belongs_to :order, optional: true
+  serialize :order_array
+  has_rich_text :response
 end
+

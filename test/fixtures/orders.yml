@@ -30,7 +30,7 @@ two:
 true:
   name: Dave Supreme
   address: MyText
-  email: dave@example.org
+  email: dave@example.com
   pay_type: Check
   ship_date: 31.12.2021
   succeed: true
@@ -41,4 +41,5 @@ test:
   email: dave@example.org
   pay_type: Check
   ship_date: 31.12.2021
+  created_at: <%= 3.days.ago %>
   succeed: true

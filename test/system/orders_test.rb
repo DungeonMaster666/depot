@@ -28,7 +28,8 @@ class OrdersTest < ApplicationSystemTestCase
     assert_equal "12.05.2023", order.ship_date.strftime("%d.%m.%Y")
 
     mail = ActionMailer::Base.deliveries.last
-    assert_equal ["MyString"], mail.to
+
+    assert_equal ["chris@nowhere.net"], mail.to
     assert_equal 'Sam Ruby <depot@example.com>', mail[:from].value
     assert_equal "Pragmatic Store Order Ship Date", mail.subject
 
@@ -48,6 +49,7 @@ class OrdersTest < ApplicationSystemTestCase
     assert_no_selector "h2", text: "Your Cart"
     click_on 'Add to Cart', match: :first
     assert_selector "h2", text: "Your Cart"
+    assert_equal_with_highlighting()
   end
 
   test 'hide cart' do
