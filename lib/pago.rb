@@ -20,7 +20,7 @@ class Pago
     sleep 3 unless Rails.env.test?
     Rails.logger.info "Done Processing Payment"
 
-    rand2 = rand(0..1)
+    rand2 = rand(0..10)
     if rand2 == 1
       OpenStruct.new(succeeded: false)
     else
